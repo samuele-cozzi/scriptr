@@ -4,20 +4,19 @@ var body_array = request.body;
 var response_array = [];
 
 for(var i=0; i< body_array.length; i++){
+
+  var Importo = (Math.random() * 1000).toFixed(2);
+  var today = new Date();
   
-  var OrderNumber = Math.floor(Math.random() * 10000000);
-  var ShopId = Math.floor(Math.random() * 10000);
   var _request = {
-     "DataTransazione": body_array[i].TS_DTA_TRANSAZ + 'T' + body_array[i].TS_ORA_TRANSAZ,
-     "IdTerminale": body_array[i].TS_TERMID,
-     "CodiceAutorizzazione": body_array[i].TS_COD_AUT,
-     "OrderNumber": OrderNumber,
-     "ShopId": ShopId
+     "DataTransazione": today.toISOString(),
+     "ImportoSto": Importo,
+     "OrderNumber": body_array[i].OrderNumber + "-A"
    }
 
   //The request object below will be used to make an HTTP call that will do a country lookup based on the IP 
   var requestObject = {
-   "url": "http://pre.servicesbo.eprice.it/mpinvoicesystem/api/cod_mp/orders",
+   "url": "http://pre.servicesbo.eprice.it/mpinvoicesystem/api/cod_mp/Refunds",
    "bodyString": JSON.stringify(_request),
    "method": "POST", // the method is optional, it defaults to GET.
    "headers": {

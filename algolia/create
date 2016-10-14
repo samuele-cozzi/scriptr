@@ -1,0 +1,76 @@
+
+		
+//First, we'll require the 'http' library to use later for calling a 3rd party webservice
+var http = require("http");
+
+//Let's say your script is expecting an http request parameter called 'myName',
+//this is how you can retrieve it
+var appId = request.parameters.applicationId;
+var index = request.parameters.index;
+
+
+//Now let's obtain the client IP from the http request header
+var ip = request.headers["x-forwarded-for"];
+var body = request.body;
+
+//Let's see now how to make a request to a 3rd party web service
+
+var requestObject = null;
+
+if (body != undefined)
+{
+  body["facets.tag"] = body.tags.split(',');
+  body.favorite = 0;
+  body.time_read = 0;
+  if (body.image.src == 'http://ifttt.com/images/no_image_card.png')
+  {
+    body.has_image = 0; 
+    body.image.src = '';
+  }
+  else
+  {
+  	body.has_image = 1;
+  }
+  //The request object below will be used to make an HTTP call that will do a country lookup based on the IP 
+  requestObject = {
+   "url": "https://" + appId + ".algolia.net/1/indexes/" + index,
+   "method": "POST",
+    "bodyString": JSON.stringify(body),
+    "headers": {
+      "content-type": "application/json",
+      "X-Algolia-API-Key": "10c0596a79389d1e359ea13707208c4a",
+      "X-Algolia-Application-Id": appId
+    }
+  }
+}
+else
+{
+    //The request object below will be used to make an HTTP call that will do a country lookup based on the IP 
+  requestObject = {
+   "url": "https://" + appId + ".algolia.net/1/indexes/" + index,
+   "method": "POST",
+    "bodyString": JSON.stringify({"message": "nobody"}),
+    "headers": {
+      "content-type": "application/json",
+      "X-Algolia-API-Key": "10c0596a79389d1e359ea13707208c4a",
+      "X-Algolia-Application-Id": appId
+    }
+  }
+}
+
+//... and now we issue the request
+var country = null;
+var result = null;
+var response = http.request(requestObject);
+if(response.status == "200"){
+ result = JSON.parse(response.body);
+}
+else
+{
+  result = response;
+}
+
+
+return result;
+
+	

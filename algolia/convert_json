@@ -1,0 +1,40 @@
+var body = request.body;
+var result = [];
+
+for(var i=0; i< body.hits.length; i++){
+  var obj ={};
+  
+  obj.objectID = body.hits[i].objectID;
+  obj.given_title = body.hits[i].given_title;
+  obj.given_url = body.hits[i].given_url;
+  obj.excerpt = body.hits[i].excerpt;
+  if(body.hits[i].image != undefined) {
+    obj.has_image = 1;
+  	obj.image = {};
+    obj.image.src = body.hits[i].image.src;
+  }
+  else {
+    obj.has_image = 0;
+  }
+  obj.favorite = parseInt(body.hits[i].favorite);
+  obj.time_read = parseInt(body.hits[i].time_read);
+  
+  var tags = body.hits[i].tags;
+  var tags_str = '';
+  for (var key in tags) {
+    if (tags_str.length == 0){
+      tags_str = tags_str + key;
+    }
+    else
+    {
+      tags_str = tags_str + ', ' + key; 
+    }
+     
+  }
+  obj.tags = tags_str;
+  obj["facets.tag"] = tags_str.split(',');
+  
+  result.push(obj);
+};
+
+return result;
