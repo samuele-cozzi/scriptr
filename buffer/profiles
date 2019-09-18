@@ -1,0 +1,57 @@
+
+		
+//First, we'll require the 'http' library to use later for calling a 3rd party webservice
+var http = require("http");
+
+//Let's say your script is expecting an http request parameter called 'myName',
+//this is how you can retrieve it
+//var appId = request.parameters.applicationId;
+//var index = request.parameters.index;
+
+
+//Now let's obtain the client IP from the http request header
+var ip = request.headers["x-forwarded-for"];
+var body = request.body;
+
+//Let's see now how to make a request to a 3rd party web service
+
+   
+//The request object below will be used to make an HTTP call that will do a country lookup based on the IP 
+requestObject = {
+    "url": "https://api.bufferapp.com/1/profiles.json",
+    "method": "GET",
+    "headers": {
+        "content-type": "application/json",
+        "Authorization": "Bearer 2/92b242a308684c0c179be743d504007f8bef78f722c93fd7ba900f60836707882a40c46d44261eecce27e2e03b31897a12f12ba80066c68f3bc4b56139c2b7d9",
+    }
+}
+
+
+//... and now we issue the request
+var country = null;
+var result = null;
+var response = http.request(requestObject);
+if(response.status == "200"){
+    var response_body = JSON.parse(response.body);
+	var result = [];
+    
+    for(var i=0; i< response_body.length; i++){
+      var obj ={};
+
+      obj.id = response_body[i].id;
+      obj.service = response_body[i].service;
+
+      result.push(obj);
+    }
+    
+ 	//result = JSON.parse(response.body);
+}
+else
+{
+  result = response;
+}
+
+
+return result;
+
+	
