@@ -1,0 +1,2 @@
+var firebaseModule = require('modules/firebase/firebaseclient.js');
+var firebase = new firebaseModule.Firebase();
