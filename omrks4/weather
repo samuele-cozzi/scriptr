@@ -1,0 +1,28 @@
+//First, we'll require the 'http' library to use later for calling a 3rd party webservice
+var http = require("http");
+
+//The request object below will be used to make an HTTP call that will do a country lookup based on the IP 
+requestObject = {
+    "url": "https://us-central1-omarks4.cloudfunctions.net/user-api/api/users",
+    "method": "GET",
+    "headers": {
+    	"content-type": "application/json"
+	}
+}
+
+var response = http.request(requestObject);
+if(response.status == "200"){
+ 	result = JSON.parse(response.body);
+    for(user in response.body.result) {
+        console.log(user.city);
+    }
+}
+else
+{
+  result = response;
+}
+
+
+return result;
+
+	
